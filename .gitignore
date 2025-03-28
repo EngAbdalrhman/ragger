@@ -1,6 +1,7 @@
 # Ignore test and target classes
 test/
 target/
+target/*
 
 # Ignore other common files and directories
 *.log
@@ -11,3 +12,5 @@ Thumbs.db
 .idea/
 .vscode/
 .env
+target/classes/application.properties
+target/classes/com/example/springai/factory/LocalAiModel.class
