@@ -1,10 +1,13 @@
 package com.example.springai.rag;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DocumentVersionRepository extends JpaRepository<DocumentVersion, Long> {
@@ -20,4 +23,8 @@ public interface DocumentVersionRepository extends JpaRepository<DocumentVersion
 
     @Query("SELECT v FROM DocumentVersion v WHERE v.documentId = ?1 AND v.isActive = true")
     Optional<DocumentVersion> findActiveVersion(String documentId);
+
+    @Modifying
+    @Query("DELETE FROM DocumentVersion v WHERE v.documentId = :documentId")
+    void deleteByDocumentId(@Param("documentId") String documentId);
 }

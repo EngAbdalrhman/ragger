@@ -1,17 +1,18 @@
 package com.example.springai.rag;
 
-import org.springframework.stereotype.Service;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.scheduling.annotation.Scheduled;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -89,6 +90,14 @@ public class CacheService {
         log.debug("Starting cache cleanup");
         chunkCache.entrySet().removeIf(entry -> isExpired(entry.getValue()));
         metadataCache.entrySet().removeIf(entry -> isExpired(entry.getValue()));
+    }
+
+    @CacheEvict(value = {"chunks", "documents"}, key = "#documentId")
+    public void evictDocument(String documentId) {
+        // Remove from in-memory caches
+        chunkCache.keySet().removeIf(key -> key.startsWith(documentId + "-"));
+        metadataCache.remove(documentId);
+        log.info("Evicted document {} from cache", documentId);
     }
 
     private <T> void evictOldestEntry(Map<String, CacheEntry<T>> cache) {

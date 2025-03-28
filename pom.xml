@@ -66,6 +66,13 @@
             <version>5.2.3</version>
         </dependency>
 
+        <!-- Meilisearch -->
+        <dependency>
+            <groupId>com.meilisearch.sdk</groupId>
+            <artifactId>meilisearch-java</artifactId>
+            <version>0.11.1</version>
+        </dependency>
+
         <!-- Spring AI -->
         <dependency>
             <groupId>org.springframework.ai</groupId>

@@ -1,0 +1,13 @@
+# Ignore test and target classes
+test/
+target/
+
+# Ignore other common files and directories
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.env
