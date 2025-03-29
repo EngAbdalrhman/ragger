@@ -1,52 +1,81 @@
-# Spring AI RAG Service
+# **Spring AI Agent Service**
 
-A Spring Boot service implementing Retrieval-Augmented Generation (RAG) with support for multiple AI models, document management, and token-based usage tracking.
+A high-performance Spring Boot service designed to function as an AI agent, providing **Retrieval-Augmented Generation (RAG)** capabilities to backend systems via HTTP requests. The service manages document processing, semantic search, AI model interactions, and token management efficiently.
 
-## Features
+---
 
-### Core RAG Capabilities
+## **1. Overview**
+
+The **Spring AI Agent Service** enables backend systems to:
+
+- Process and index documents
+- Perform semantic searches using vector embeddings
+- Integrate with AI models (Local, OpenAI, Gemini)
+- Manage and track token usage
+- Seamlessly integrate with existing backend infrastructures
+
+### **System Architecture**
+
+```uml
+Main Backend <--> AI Agent Service <--> AI Models (Local/OpenAI/Gemini)
+     |                   |
+     └───────[Shared]────┘
+          PostgreSQL DB
+```
+
+---
+
+## **2. Features**
+
+### **2.1 Core RAG Capabilities**
 
 - Document processing and chunking
-- Vector embeddings for semantic search
-- Support for multiple AI models (Local, OpenAI, Gemini)
-- Batch processing for large documents
-- Caching system for frequently accessed content
+- Vector-based semantic search
+- Multi-model support: Local models, OpenAI, Gemini
+- Batch document processing
+- Caching for optimized performance
 
-### Document Management
+### **2.2 Document Management**
 
-- Support for PDF, DOCX, TXT, and other file formats
-- Document versioning
+- Support for PDF, DOCX, TXT, and other formats
+- Document version control
 - Collection-based organization
-- Document metadata tracking
-- Access control and permissions
+- Metadata tracking and tagging
+- Access control and user permissions
 
-### Search Capabilities
+### **2.3 Search Capabilities**
 
-- Meilisearch integration for full-text search
-- Vector similarity search
-- Combined search results ranking
-- Filtered and faceted search
+- **Meilisearch integration** for full-text search
+- **Vector similarity search** using embeddings
+- Hybrid ranking for enhanced relevance
+- **Filtered and faceted search**
 
-### Token Management
+### **2.4 Token Management**
 
-- Token tracking for local model usage
-- Token purchase system
-- Usage estimation
-- Token transfer between users
+- Real-time token tracking
+- Token purchase and transfer system
+- Usage estimation and cost forecasting
+- Secure token transactions
 
-## Setup
+---
 
-### Prerequisites
+## **3. Setup Instructions**
 
-- Java 17 or higher
-- PostgreSQL 12 or higher
-- Meilisearch server
-- Maven
+### **3.1 Prerequisites**
 
-### Database Setup
+Ensure the following dependencies are installed:
+
+- **Java 17+**
+- **PostgreSQL 12+**
+- **Meilisearch Server**
+- **Maven Build System**
+
+### **3.2 Database Configuration**
+
+Execute the following SQL commands:
 
 ```sql
--- Create database
+-- Create the database
 CREATE DATABASE springai;
 
 -- Enable required extensions
@@ -54,17 +83,17 @@ CREATE EXTENSION vector;
 CREATE EXTENSION pg_stat_statements;
 ```
 
-### Configuration
+### **3.3 Application Configuration**
 
-Update `application.properties` with your settings:
+Modify `application.properties` accordingly:
 
 ```properties
-# Database
+# Database Connection
 spring.datasource.url=jdbc:postgresql://localhost:5432/springai
 spring.datasource.username=your-username
 spring.datasource.password=your-password
 
-# Meilisearch
+# Meilisearch Configuration
 meilisearch.host=http://localhost:7700
 meilisearch.api-key=your-master-key
 
@@ -73,93 +102,142 @@ app.token.default-limit=1000000
 app.token.words-per-token=4
 ```
 
-## API Endpoints
+---
 
-### Document Management
+## **4. API Endpoints**
 
-```bash
-# Upload document
+### **4.1 Document Management**
+
+#### Upload Document
+
+```http
 POST /api/rag/upload
 Content-Type: multipart/form-data
-Parameters:
-- file: Document file
-- collectionId: (optional) Collection ID
-- tags: (optional) Document tags
-- batch: (optional) Use batch processing
-
-# Query document
-POST /api/rag/query
-Parameters:
-- query: Search query
-- modelName: (optional) AI model to use
-- version: (optional) Document version
 ```
 
-### Collections
+**Parameters:**
 
-```bash
-# Create collection
+- `file`: The document file to upload
+- `collectionId`: _(Optional)_ Collection ID for grouping
+- `tags`: _(Optional)_ Document tags
+- `batch`: _(Optional)_ Enables batch processing
+
+#### Query Documents
+
+```http
+POST /api/rag/query
+```
+
+**Parameters:**
+
+- `query`: Search query string
+- `modelName`: _(Optional)_ AI model selection
+- `version`: _(Optional)_ Specific document version
+
+### **4.2 Collections**
+
+#### Create Collection
+
+```http
 POST /api/rag/collections
 Content-Type: application/json
+```
+
+**Request Body:**
+
+```json
 {
-    "name": "Collection Name",
-    "description": "Collection Description"
+  "name": "Collection Name",
+  "description": "Collection Description"
 }
+```
 
-# List collections
+#### List All Collections
+
+```http
 GET /api/rag/collections
+```
 
-# Get collection documents
+#### Retrieve Documents in a Collection
+
+```http
 GET /api/rag/collections/{collectionId}/documents
 ```
 
-### Token Management
+### **4.3 Token Management**
 
-```bash
-# Get token balance
+#### Get Token Balance
+
+```http
 GET /api/tokens/balance
+```
 
-# Purchase tokens
+#### Purchase Tokens
+
+```http
 POST /api/tokens/purchase
-Parameters:
-- amount: Number of tokens to purchase
+```
 
-# Estimate token usage
+**Parameters:**
+
+- `amount`: Number of tokens to purchase
+
+#### Estimate Token Usage
+
+```http
 GET /api/tokens/estimate
-Parameters:
-- text: Text to estimate tokens for
+```
 
-# Transfer tokens
+**Parameters:**
+
+- `text`: Input text for estimation
+
+#### Transfer Tokens
+
+```http
 POST /api/tokens/transfer
-Parameters:
-- toUserId: Recipient user ID
-- amount: Number of tokens to transfer
 ```
 
-### Search
+**Parameters:**
 
-```bash
-# Search documents
+- `toUserId`: Recipient user ID
+- `amount`: Number of tokens to transfer
+
+### **4.4 Search Operations**
+
+#### Search for Documents
+
+```http
 GET /api/rag/search
-Parameters:
-- query: Search query
-- filters: (optional) Search filters
-- limit: (optional) Result limit
-
-# Similar documents
-GET /api/rag/similar
-Parameters:
-- documentId: Reference document ID
-- limit: (optional) Result limit
 ```
 
-## Integration Guide
+**Parameters:**
 
-### Main Backend Integration
+- `query`: Search keyword
+- `filters`: _(Optional)_ Search filters
+- `limit`: _(Optional)_ Maximum results
 
-1. Add the service as a dependency:
+#### Find Similar Documents
+
+```http
+GET /api/rag/similar
+```
+
+**Parameters:**
+
+- `documentId`: Reference document ID
+- `limit`: _(Optional)_ Maximum results
+
+---
+
+## **5. Integration Guide**
+
+### **5.1 Dependency Installation**
+
+Add the service to your Maven project:
 
 ```xml
+
 <dependency>
     <groupId>com.example</groupId>
     <artifactId>spring-ai</artifactId>
@@ -167,7 +245,7 @@ Parameters:
 </dependency>
 ```
 
-2. Configure the service in your application:
+### **5.2 Configuration**
 
 ```java
 @Configuration
@@ -179,15 +257,15 @@ public class RagConfig {
 }
 ```
 
-3. Use the service in your controllers:
+### **5.3 Controller Example**
 
 ```java
 @RestController
 @RequestMapping("/api")
-public class YourController {
+public class DocumentController {
     private final RagService ragService;
 
-    public YourController(RagService ragService) {
+    public DocumentController(RagService ragService) {
         this.ragService = ragService;
     }
 
@@ -199,95 +277,66 @@ public class YourController {
 }
 ```
 
-## Best Practices
+---
 
-1. Document Processing
+## **6. Best Practices**
 
-- Keep individual documents under 50MB
-- Use batch processing for large documents
-- Properly tag and categorize documents
+### **6.1 Document Processing**
 
-2. Token Management
+- Maintain documents under **50MB** for efficiency
+- Use **batch processing** for large files
+- Apply **tags and metadata** for better organization
 
-- Monitor token usage regularly
-- Set up alerts for low token balance
-- Purchase tokens in bulk for better rates
+### **6.2 Token Management**
 
-3. Search Optimization
+- Regularly monitor usage via analytics
+- Set alerts for **low token balance**
+- Optimize model calls to reduce token consumption
 
-- Use specific queries for better results
-- Leverage filters for refined search
+### **6.3 Search Optimization**
+
+- Use **precise queries** for best results
+- Apply **filtering and faceted search** for better refinement
 - Cache frequently accessed results
 
-4. Performance
+### **6.4 Performance Considerations**
 
-- Configure appropriate chunk sizes
-- Monitor and adjust cache settings
-- Use batch processing when appropriate
+- Optimize **chunk sizes** for vector processing
+- Adjust cache configurations as needed
+- Utilize **batch processing** for high workloads
 
-## Monitoring and Maintenance
+---
 
-1. Monitor token usage:
+## **7. Security Considerations**
 
-```sql
-SELECT user_id, SUM(tokens_used)
-FROM token_usage_logs
-GROUP BY user_id;
-```
+### **7.1 API Security**
 
-2. Check search performance:
+- Implement **authentication** and **rate limiting**
+- Validate all incoming parameters
+- Secure sensitive endpoints
 
-```sql
-SELECT AVG(response_time)
-FROM search_logs
-WHERE timestamp > NOW() - INTERVAL '1 hour';
-```
+### **7.2 Data Protection**
 
-3. Monitor document processing:
-
-```sql
-SELECT status, COUNT(*)
-FROM document_processing_logs
-GROUP BY status;
-```
-
-## Security Considerations
-
-1. API Authentication
-
-- Use secure headers for user identification
-- Implement rate limiting
-- Validate all input parameters
-
-2. Document Access
-
-- Implement proper access controls
-- Audit document access
+- Implement **access controls** for documents
 - Encrypt sensitive content
+- Audit document access logs
 
-3. Token Management
+### **7.3 Token Security**
 
-- Secure token transfer operations
-- Monitor for unusual token usage
-- Implement transaction logging
+- Secure **token transfer operations**
+- Monitor usage patterns for anomalies
+- Implement logging for all transactions
 
-## Troubleshooting
+---
 
-Common issues and solutions:
+## **8. Troubleshooting**
 
-1. Token depletion
+| Issue                           | Solution                                              |
+| ------------------------------- | ----------------------------------------------------- |
+| **Token depletion**             | Check balance, review logs, request additional tokens |
+| **Slow search**                 | Optimize Meilisearch indexes, analyze query patterns  |
+| **Document processing failure** | Check format support, verify file size constraints    |
 
-   - Check token balance
-   - Review token usage logs
-   - Contact support for emergency token allocation
+---
 
-2. Search performance
-
-   - Verify Meilisearch configuration
-   - Check index optimization
-   - Review search patterns
-
-3. Document processing failures
-   - Check file format support
-   - Verify file size limits
-   - Review processing logs
+### **Contact Support for Assistance** 🚀
