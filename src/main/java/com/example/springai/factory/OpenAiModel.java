@@ -18,7 +18,7 @@ public class OpenAiModel implements AiModel {
     private final ConfigurationService configurationService;
 
     @Override
-    public String execute(String input) {
+    public String generateContent(String input) {
         ModelConfig config = configurationService.getModelConfig("openai");
         log.info("Processing input with OpenAI model: {} ({})", config.getModelName(), input);
 

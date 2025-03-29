@@ -13,7 +13,7 @@ public class LocalAiModel implements AiModel {
     private final TokenManager tokenManager;
 
     @Override
-    public String execute(String input) {
+    public String generateContent(String input) {
         String userId = getCurrentUserId();
 
         // Check if user has enough tokens

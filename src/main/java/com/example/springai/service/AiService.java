@@ -27,6 +27,6 @@ public class AiService {
 
         log.info("Executing AI model: {} with input: {}", selectedModel, input);
         AiModel model = modelFactory.getAiModel(selectedModel);
-        return model.execute(input);
+        return model.generateContent(input);
     }
 }

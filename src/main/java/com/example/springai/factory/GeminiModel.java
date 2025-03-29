@@ -18,7 +18,7 @@ public class GeminiModel implements AiModel {
     private final ConfigurationService configurationService;
 
     @Override
-    public String execute(String input) {
+    public String generateContent(String input) {
         ModelConfig config = configurationService.getModelConfig("gemini");
         log.info("Processing input with Gemini model: {} ({})", config.getModelName(), input);
 
