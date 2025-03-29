@@ -1,6 +1,6 @@
 # **Spring AI Agent Service**
 
-A high-performance Spring Boot service designed to function as an AI agent, providing **Retrieval-Augmented Generation (RAG)** capabilities to backend systems via HTTP requests. The service manages document processing, semantic search, AI model interactions, and token management efficiently.
+An intelligent Spring Boot service designed to act as an AI agent that interacts with users through natural language to understand their requirements and communicate with a main backend system.
 
 ---
 
