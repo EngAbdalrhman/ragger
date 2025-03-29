@@ -1,6 +1,7 @@
 package com.example.springai.config;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -24,11 +25,14 @@ public class EnhancedRabbitMQConfig {
 
     @Bean
     public Queue aiRequestQueue() {
-        return QueueBuilder.durable("ai.local.requests")
-                .withArgument("x-dead-letter-exchange", "")
-                .withArgument("x-dead-letter-routing-key", "ai.local.requests.dlq")
-                .maxPriority(10)
-                .build();
+        if (aiConfig.getLocal().isQueueEnabled()) {
+            return QueueBuilder.durable("ai.local.requests")
+                    .withArgument("x-dead-letter-exchange", "")
+                    .withArgument("x-dead-letter-routing-key", "ai.local.requests.dlq")
+                    .maxPriority(10)
+                    .build();
+        }
+        return null;
     }
 
     @Bean
