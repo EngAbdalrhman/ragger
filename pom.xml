@@ -84,6 +84,17 @@
             <artifactId>spring-ai-vertex-ai-spring-boot-starter</artifactId>
             <version>${spring-ai.version}</version>
         </dependency>
+        
+        <!-- Message Queue -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-aiplatform</artifactId>
+            <version>3.22.0</version>
+        </dependency>
 
         <!-- Spring Boot Starters -->
         <dependency>
